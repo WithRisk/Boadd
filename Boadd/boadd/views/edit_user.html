@@ -1,0 +1,331 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="viewport" content="width=device-width,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no"/>
+<meta name="format-detection" content="telephone=no"/>
+<title>通讯录</title>
+<link href="css/main.css" rel="stylesheet" type="text/css" />
+<script type="text/javascript" src="/js/jquery-1.6.2.min.js"></script>
+<script type="text/javascript" src="/js/socket.js"></script>
+<script type="text/javascript" src="/js/canvas_main.js"></script>
+<script type="text/javascript" src="/js/canvas_Query.js"></script>
+
+
+<style type="text/css">
+
+.addfileI {cursor:pointer;position:relative;left:0px;top:-20px;width:60px;opacity:0;filter:alpha(opacity=0)}
+.edit{
+	width:170px;
+	height:20px;
+	display:inline-block;
+	margin-left:20px;
+	border: 1px solid transparent;
+	border-radius: 3px 3px 3px 3px;
+	box-shadow: 0 0 2px 3px #DCDCDC;
+	color: #333333;
+}
+#canvas-container{ width: 500px; top: 20px; left: 50px; position: absolute; }
+#clip{ width: 80px; height: 22px; font-weight: bold; color: #fff; line-height: 22px; background-color: rgba(0,0,0,0.6); border: 1px solid #333; float:right; }
+#imgList img{ margin: 0 10px 10px 0; float: left; display: inline; }
+#result{ padding: 10px 0; }
+</style>
+<script type="text/javascript">
+	
+	var $j=jQuery.noConflict(); 
+	
+	
+	function isIos()
+	{
+	var ua = navigator.userAgent.toLowerCase();
+    return ua.indexOf("ipad") > -1 || ua.indexOf("ipod") > -1 || ua.indexOf("iphone os") > -1;
+	}
+
+	
+	$j(document).ready(function(){
+			
+
+		$j('#upload_file').change(function(){
+				var me = this,
+						fc = new Widget.ScreenShot('result', {
+							file: me.files[0],
+							height: 128,
+							width: 128
+						});
+					fc.init();
+					$j('#lpic').hide();
+					$j('#result').css('display','inline-block');
+					$j('.user_basic').css('margin-top','-100px');
+					$.g('clip').onclick = function() {
+						// fc.clip();
+						$j('#imgList')
+						var img = new Image(),
+							src = fc.clip();
+							img.src = src;
+
+						$.g('imgList').appendChild(img);
+
+			}
+		});
+		//$j(".resizeme" ).aeImageResize({ height: 128, width: 128 });
+
+		//$j("#upload_file").change(function(){ 
+			//$j('#up').trigger("click");
+		//	$j(".resizeme" ).aeImageResize({ height: 128, width: 128 });
+ 	    //});
+ 	    $j('#bc_avg').click(function(){
+ 	    	save_avg();
+ 	    });
+		//-----------------------------------------
+		//简单的事件处理程序，响应自onChange,onSelect事件，按照上面的Jcrop调用
+	//	function showPreview(coords){
+	//		if(parseInt(coords.w) > 0){
+				//计算预览区域图片缩放的比例，通过计算显示区域的宽度(与高度)与剪裁的宽度(与高度)之比得到
+	//			var rx = $j("#preview_box").width() / coords.w; 
+	//			var ry = $j("#preview_box").height() / coords.h;
+				//通过比例值控制图片的样式与显示
+	//			$j("#crop_preview").css({
+	//				width:Math.round(rx * $j("#lpic").width()) + "px",	//预览图片宽度为计算比例值与原图片宽度的乘积
+	//				height:Math.round(rx * $j("#lpic").height()) + "px",	//预览图片高度为计算比例值与原图片高度的乘积
+	//				marginLeft:"-" + Math.round(rx * coords.x) + "px",
+	//				marginTop:"-" + Math.round(ry * coords.y) + "px"
+	//			});
+	//		}
+	//	};
+		//-----------------------------------------
+ 	    if(!isIos()){
+		$j('#pc_upload').show();
+		$j('#preview_box').show();	
+		$j('#bc_avg').show();
+		$j('#clip').show();
+	//	$j("#lpic").Jcrop({
+	//		onChange:showPreview,
+	//		onSelect:showPreview,
+	//		aspectRatio:1,
+	//		setSelect: [100,100,20,20]
+
+	//	});	
+
+		}
+	});
+</script>
+</head>
+
+<body>
+	<div class="wrap0" style="overflow-y:scroll;-webkit-overflow-scrolling:touch;">
+		<div class="con_main">
+
+			<div class="con_content" style="width:412px;"> 
+				<div class="user_act">
+					<% if(_avatar!=null){%>
+					<img id="lpic" src="data:image/png;base64,<%=_avatar%>" style="width:128px;height:128px;"/>
+					<%}else{%>
+					<img id="lpic" src="images/avatar128.png" style="width:128px;height:128px;"/>
+					<%}%>
+					<div id="result" onselectstart="return false;" style="display:none;width:128px;height:128px;">
+					</div>
+					 <div id="imgList" style="float:right;position:absolute;margin-left:420px;width:128px;height:128px;margin-top:-140px;">
+	    			 </div>
+					<!-- 
+					
+					<% if(_avatar!=null){%>
+					<% var t = _avatar.split(",")%>
+					<% if (t.length > 1 ){%>
+					    <div style="width:128px;height:128px;display:inline-block;overflow:hidden;">
+                            <img id="lpic" src="<%=_avatar.split(",")[0]%>" width=128 height=128
+                            class="resizeme"/>
+                           </div>
+                           <span id="preview_box" class="crop_preview" style="display:none;"><img id="crop_preview" src="<%=_avatar.split(",")[0]%>" style="<%=_avatar.split(",")[1]%>"  /></span>
+						
+					<%}else{%>
+                         <div style="width:128px;height:128px;display:inline-block;">
+                         <img id="lpic" src="<%=_avatar%>" width=128  height=128 class="resizeme"/>
+                         </div>
+                         <span id="preview_box" class="crop_preview" style="display:none;"><img id="crop_preview" src="<%=_avatar%>" /></span>
+					<%}%>
+					<%}else{%>
+						 <div style="width:128px;height:128px;display:inline-block;">
+                        
+                              </div>
+                         <span id="preview_box" class="crop_preview" style="display:none;"><img id="crop_preview" src="images/avatar128.png" style="width:128px;height:128px;" /></span>
+					<%}%>
+					-->
+					<div class="act_btn">
+						<div class="btn_ed" onclick="show_edit(this)">编辑</div>
+						<form method="post" enctype="multipart/form-data" action="/file-upload" id="pc_upload" style="display:none;">
+						<div class="btn_ed" style="position:relative;" id="upload_avg">上传头像<input class="addfileI" type="file" name="thumbnail" id="upload_file"/></div>
+						<input type="submit" class="addfileI" id="up" style="display:none;">
+						</form>			
+						<div class="btn_ed" id="bc_avg"  style="display:none">保存头像</div>	
+						
+						<input type="button" value="剪裁" id="clip" style="display:none" />
+
+						
+
+						<input type="hidden" value="<%= _userid%>" id="user_id" >
+
+					</div>
+					<div class="user_basic">
+						<p><%=_sut_name%> <%=_class%></p>
+						<p><% var type=_usertype==1 ? '学生':'老师' %><%-type%></p>
+						<p class="user_name"><%=_name%></p>
+					</div>
+				</div>
+				<div class="user_pro">
+					<ul class="up_list">
+						<li>
+							<span class="up_title">性别:</span>
+							<span id="sex" class="up_pro" ><%  var sex = _sex == 1 ? '女' : '男'; %><%-sex%></span>
+							<div  id="_sex" style="display:none;">
+							<div style="display:inline-block;margin-left:20px;">
+
+							<% if (_sex == 1) {%>
+							<input type="radio" id="nan" name="sbox" value="0" checked="">男
+							<input type="radio" id="nv" name="sbox" value="1" checked="checked">女
+							<%}else{%>
+							<input type="radio" id="nan" name="sbox" value="0" checked="checked">男
+							<input type="radio" id="nv" name="sbox" value="1" checked="">女
+							<%}%>
+							</div>
+							</div>
+						</li>
+						<li>
+							<span class="up_title">生日:</span>
+							<span id="birthday" class="up_pro" ><%=_birthday%></span>
+							<input id="_birthday"  type="date" style="display:none;width:170px;height:20px;display:none;margin-left:20px;" value="<%=_birthday%>" />
+						</li>
+						<li>
+							<span class="up_title">学号:</span>
+							<span id="sut_id" class="up_pro"><%=_sut_id%></span>
+							<div id="_sut_id" class="edit" contenteditable="true" style="display:none;"><%=_sut_id%></div>
+						</li>
+						<li>
+							<span class="up_title">电话:</span>
+							<span id="phone" class="up_pro"><%=_phone%></span>
+							<div id="_phone" class="edit" contenteditable="true" style="display:none;"><%=_phone%></div>
+						</li>
+						<li>
+							<span class="up_title">邮箱:</span>
+							<span id="email" class="up_pro"><%=_email%></span>
+							<div id="_email" class="edit" contenteditable="true" style="display:none;"><%=_email%></div>
+						</li>
+						<li>
+							<span class="up_title">地址:</span>
+							<span id="address" class="up_pro"><%=_address%></span>
+							<div id="_address" class="edit" contenteditable="true" style="display:none;"><%=_address%></div>
+						</li>
+						<li>
+							<span class="up_title">家长:</span>
+							<span id="p_name" class="up_pro"><%=_p_name%></span>
+							<div id="_p_name" class="edit" contenteditable="true" style="display:none;"><%=_p_name%></div>
+						</li>
+						<li>
+							<span class="up_title">家长电话:</span>
+							<span id="p_phone" class="up_pro"><%=_p_phone%></span>
+							<div id="_p_phone" class="edit" contenteditable="true" style="display:none;"><%=_p_phone%></div>
+						</li>
+						<li>
+							<span class="up_title">个人简介:</span>
+							<span id="remark" class="up_pro"><%=_remark%></span>
+							<div id="_remark" class="edit" contenteditable="true" style="display:none;width:240px;height:80px;"><%=_remark%></div>
+						</li>
+					</ul>
+				</div>
+			</div>
+		</div>
+	</div>
+	<script>
+	var socket = io.connect('http://192.168.0.108');
+	
+
+
+		//	input.live('change', function() {
+				
+		//	}, false);
+	function show_edit (showid){
+		if($j(showid).text()!=='保存'){
+		$j('#sex').hide();$j('#_sex').show();
+		$j('#birthday').hide();$j('#_birthday').show();
+		$j('#sut_id').hide();$j('#_sut_id').show();
+		$j('#phone').hide();$j('#_phone').show();
+		//$j('#email').hide();$j('#_email').show();
+		$j('#address').hide();$j('#_address').show();
+		$j('#p_name').hide();$j('#_p_name').show();
+		$j('#p_phone').hide();$j('#_p_phone').show();
+		$j('#remark').hide();$j('#_remark').show();
+
+		$j(showid).text('保存');
+		}else{
+
+		$j('#sex').show();$j('#_sex').hide();
+		$j('#birthday').show();$j('#_birthday').hide();
+		$j('#sut_id').show();$j('#_sut_id').hide();
+		$j('#phone').show();$j('#_phone').hide();
+		//$j('#email').show();$j('#_email').hide();
+		$j('#address').show();$j('#_address').hide();
+		$j('#p_name').show();$j('#_p_name').hide();
+		$j('#p_phone').show();$j('#_p_phone').hide();
+		$j('#remark').show();$j('#_remark').hide();
+		
+		$j(showid).text('编辑');
+		save_userinfo();
+		}
+	}
+	var save_userinfo = function(){
+		var _sex=$j("input[name='sbox']:checked").val();
+		var _birthday=$j('#_birthday').text().trim();
+		var _stu_id=$j('#_sut_id').text().trim();
+		var _phone=$j('#_phone').text().trim();
+		//var _email=$j('#_email').text().trim();
+		var _address=$j('#_address').text().trim();
+		var _p_name=$j('#_p_name').text().trim();
+		var _p_phone=$j('#_p_phone').text().trim();
+		var _remark=$j('#_remark').text().trim();
+		
+		
+	
+	    socket.emit('save User', _sex, _birthday, _stu_id, _phone, _address, _p_name, _p_phone, _remark,  function(ok){
+			//插入了,你懂的
+		});
+	}
+	var save_avg = function(){
+		//var _width = $j('#crop_preview').css('width');
+		//var _height = $j('#crop_preview').css('height');
+		//var _margin_left = $j('#crop_preview').css('margin-left');
+		//var _margin_right = $j('#crop_preview').css('margin-top');
+		var _src =  $j('#imgList').find('img').attr('src').substring(22);  
+		var _user_id = $j('#user_id').val();
+
+		socket.emit('save avg',  _src,_user_id,  function(ok){
+			//插入了,你懂的
+		});
+
+	}
+
+		//搜索联系人 
+	socket.on('save avg', function (type){
+		if(type!=='ok'){
+			alert('更换头像成功');
+			var uribase64 = 'data:image/png;base64,'+type;
+			$j('#lpic').attr('src',uribase64);
+			$j('.user_basic').css('margin-top','');
+			$j('#lpic').show();
+			$j('#result').hide();
+			$j('canvas').hide();
+		}
+		return;
+	});
+
+
+
+
+		//事件销毁
+		//$j("#unhook").click(function(e){
+		//	jcrop_api.destroy();
+		//	$j("#unhook,#enable,.requiresjcrop").hide();
+		//	$j("#rehook").show();
+		//	return nothing(e);
+		//});
+	</script>
+</body>
+</html>

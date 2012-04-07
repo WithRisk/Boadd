@@ -1,0 +1,372 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="viewport" content="width=device-width,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no"/>
+<meta name="format-detection" content="telephone=no"/>
+<title>首页聊天</title>
+<link href="css/main.css" rel="stylesheet" type="text/css" />
+<script type="text/javascript" src="/js/jquery-1.6.2.min.js"></script>
+<script type="text/javascript" src="/js/socket.js"></script>
+
+</head>
+
+<body>
+	<div class="wrap">
+		<div class="head_bar">
+			<ul class="hb_list">
+			<% for(var i = 0,len = offline_name.length; i<len; i++) {
+					var  offline_name =  offline_name[i];
+
+var avg = offline_name.user_avatar!=null ? 'data:image/png;base64,'+offline_name.user_avatar : 'images/avatar32.png' ;
+		%>	
+			<li class="hb_curr" id="member_<%- offline_name.sender_id%>"><img src="<%-avg%>"><span><%=offline_name.sender_name %></span></li>
+			<%}%>
+			</ul>
+		</div>
+	  	<div class="chart_main">
+			<div class="c_close" id="0"><a href="#"></a></div>
+			<div class="chat">
+			<div class="chart_box" id="chat_0"  style="display:none">
+			</div>
+			<div class="chart_box" id="chat_<%- offline_name.sender_id%>" >
+			<% for(var i = 0,len = offline_message.length; i<len ;i++){
+								var info = offline_message[i];
+			%>	
+			<div class="twi_avg gay"><div class="blue"><%= info.sender_name %> <%=info.created%></div><%= info.message %></div>
+			<% }%>
+			</div>
+			
+			</div>
+			<div class="chart_input"><textarea name="" cols="" rows="" id="message"></textarea></div>
+	  	</div>
+		<div class="user_box">
+			<div class="seach"><input id="search_Contact" type="text" value="搜索联系人" /></div>
+			<div class="group_box">
+				<div class="cs_bom">
+					<ul class="cs_tab">
+						<li class="cs_curr">教师</li>
+						<li>学生</li>
+						<li>家长</li>
+					</ul>
+				
+				<div class="cs_group">
+				<div class="user_group">
+					<h3 class="group_title0 gt_first" onclick="show_member(this)">教师</h3>
+					<ul class="member_list"  style="display:none;">
+					<% for(var i = 0,len = infos.length; i<len ;i++){
+								var info = infos[i];
+
+				var avg = info.user_avatar!=null ? 'data:image/png;base64,'+info.user_avatar : 'images/avatar32.png' ;
+						%>
+						<%	if(info.usertype=='2'){ %>
+						<li id="node_<%-  info.id %>"><img src="<%-avg%>" /><%= info.username %></li>
+						<% }%>
+						<% }%>
+					</ul>
+				</div>
+				<div class="user_group">
+					<h3 class="group_title0" onclick="show_member(this)">学生</h3>
+						<ul class="member_list" style="display:none;">
+						<% for(var i = 0, len = infos.length; i< len; i++){
+								var info = infos[i];
+			var avg = info.user_avatar!=null ? 'data:image/png;base64,'+info.user_avatar : 'images/avatar32.png' ;
+							%>
+							<%	if(info.usertype=='1'){ %>
+								<li  id="node_<%-  info.id %>"><img src="<%-avg%>" /><%= info.username %></li>
+							<% }%>	
+							<% }%>
+						</ul>
+				</div>
+				<div class="user_group">
+					<h3 class="group_title0" onclick="show_member(this)">家长</h3>
+					<ul class="member_list" style="display:none;">
+						<li><img src="images/user_head/1.gif" />家长名称1</li>
+						<li><img src="images/user_head/1.gif" />家长名称2</li>
+						<li><img src="images/user_head/1.gif" />家长名称3</li>
+						<li><img src="images/user_head/1.gif" />家长名称4</li>
+						<li><img src="images/user_head/1.gif" />家长名称5</li>
+						<li><img src="images/user_head/1.gif" />家长名称6</li>
+					</ul>
+				</div>
+				<div class="user_group" id="search_list" style="display:none;">
+					<h3 class="group_title" onclick="show_member(this)">搜索联系人</h3>
+					<ul class="member_list" id="search_list_info">
+					
+					</ul>
+				</div>
+				</div>
+				</div>
+			</div>
+		</div>		
+	</div>
+	<input type="hidden" id="username" value="<%- userName %>" />
+
+
+	<script>
+		//展开列表
+		function show_member(member){			
+		var t = $(member).next();
+		if(t.css('display')=='none'){
+			$(member).removeClass().addClass('group_title');
+			t.show();
+		}else{
+			$(member).removeClass().addClass('group_title0');
+			t.hide();
+		}
+		};
+		//创建窗口
+		var chat_info = function (chat_id){
+
+			$('.member_list').find('li').removeClass();
+
+		    $('#node_'+chat_id).addClass("ml_curr");
+		
+			var chatid = chat_id;//干净的Id
+
+			var avg = $('#node_'+chat_id).find('img').attr('src');
+			var member_id = 'member_'+chatid;
+			$('.hb_list').find('li').removeClass();
+			//先查找下是否有重复的对话框,如果重复了，那就直接打开
+			$('.c_close').attr('id',chatid);
+			if($('#'+member_id).size()<=0){
+		
+			//向左边的聊天导航栏添加新对话
+			$('.hb_list').append('<li class="hb_curr" id="member_'+chatid+'"><img src="'+avg+'"><span>'+$('#node_'+chatid).text()+'</span></li>');
+			$('.head_bar').scrollTop(1000);
+			//注册切换事件
+			$('.hb_list').find('li').bind('click',function(){
+				$('.hb_list').find('li').removeClass();//清除左边聊天头像列表的所有class
+				$(this).addClass('hb_curr');
+				var menmberid = $(this).attr('id').replace('member_','');
+				//先隐藏所有窗口，然后点击打开和当前相对应的窗口
+				$('.chart_box').hide();
+				$('#chat_'+menmberid+'').show();
+			});
+			//先隐藏所有别的窗口
+			$('.chart_box').hide();
+			//添加新的聊天窗口
+			$('.chat').append('<div class="chart_box" id="chat_'+chatid+'"></div>');
+			}else{
+				//先清除所有的聊天窗口样式 begin
+				$('.hb_list').find('li').removeClass();
+				$('.chart_box').hide();
+				//end
+				//开启当前窗口
+				$('#member_'+chatid).addClass('hb_curr');//左头像
+				$('#chat_'+chatid).show();//列表
+			}
+		
+		} 
+
+		var memberclick =  function  (type){
+			//type为0是原来联系人列表里面，type为1是搜索得到的
+		   $('.member_list').find('li').click(function(){
+		   	var  chat_id = '';
+		   	if(type==0){
+			chat_id = $(this).attr('id').replace('node_','');//当前聊天人的Id
+			}
+			if(type==1){
+			chat_id = $(this).attr('id').replace('node_s','');//当前聊天人的Id
+			}
+			if(chat_id!=='none' &&chat_id!==undefined){
+				chat_info(chat_id);
+			}else{
+				aler('130行出错!');
+			}
+			
+		});
+		}	
+
+		var closeclick  = function (){
+		$('.c_close').click(function(){
+			var closeid = $('.c_close').attr('id');
+			if(closeid!==0){
+				$('#chat_'+closeid).remove();
+				$('#member_'+closeid).remove();
+				$('.chat').children().last().show();
+				$('.hb_list').children().last().addClass('hb_curr');
+				var newId = $('.chat').children().last().attr('id').replace('chat_','');
+				$('.c_close').attr('id',newId);
+			}
+		});
+		}
+		//搜索
+		
+
+		$('#search_Contact').focus(function(){
+			$('#search_Contact').val('');
+		
+		});
+		$('#search_Contact').blur(function(){
+			var search_value = $('#search_Contact').val();
+			if(search_value===''){
+				$('#search_Contact').val('搜索联系人');
+				$('.group_box').children().show();
+				$('#search_list').hide();
+			}
+		});
+
+
+		$('#search_Contact').keypress(function (e){
+			var search_value = $(this).val();
+			if (e.keyCode === 13) {
+				search();
+				return false;
+			}
+		});
+		//-----------------------------socket处理开始------------------------------
+		var socket = io.connect('http://192.168.0.108');
+		//发送消息
+		$('#message').keypress(function(e){
+			if (e.keyCode === 13) {
+				sendmessage();
+				return false;
+			}
+		});
+		var search = function (){
+			var sea_val = $.trim($('#search_Contact').val());
+			if(sea_val === 0){
+				return;
+			}
+			socket.emit('search Contact',sea_val);
+
+		}
+		//发送消息方法
+		var sendmessage = function(){
+			var msg = $.trim($('#message').val());//信息内容
+			if(msg.length===0){
+				return;
+			}
+			var userName = $('#username').val();
+			var to = $(".hb_curr").find("span").text();//接收人
+			var to_id = $('.hb_curr').attr('id').replace('member_','');//获取接收人Id
+
+
+			socket.emit('private message', to, msg, to_id);
+			showmessage_me(userName,msg);
+			
+		}
+		var showcontact = function (_val){
+			$('#search_list_info').empty();
+			if(_val!==0){
+				var html ='';
+				for(var i=0;i<_val.length;i++){
+			var avg = _val[i].user_avatar!=null ? 'data:image/png;base64,'+_val[i].user_avatar : 'images/avatar32.png' ;
+
+				html+= '<li  id="node_s'+_val[i].id+' " ><img src="'+avg+'" />'+_val[i].username+'</li>';
+				}
+				$('.group_box').children().hide();
+				$('#search_list_info').append(html);
+				$('#search_list').show();
+				//注册事件
+				memberclick(1);
+				closeclick();
+			}else{
+				alert('没有该联系人');
+			}
+		}
+
+		//搜索联系人 
+		socket.on('search Contact', function (_val){
+			showcontact(_val);
+			   return;
+		});
+		// 接收到私人信息
+		socket.on('private message', function(from, msg, userid){
+				alert(from);
+				alert(msg);
+				showmessage(from, msg, userid);
+				$('#message').val('');
+				return;
+		});
+		// 发送消息失败,其实就是发送离线消息了
+		socket.on('message error', function(to, msg, to_id){
+				showmessage(from, msg);
+				//showmessage_onffline(to, msg,to_id);
+				$('#message').val('');
+				return;
+		});
+		
+		var showmessage = function (from, msg, userid){
+			var from = formatHTML(from);
+			var msg = formatHTML(msg);
+			alert($('chat_'+userid).size());
+			//先查找是否有对话窗口，没有的话先创建
+			if($('chat_'+userid).size()==0){
+				creat_chat(userid);
+			}
+			//if($('member_'+userid).size()==0){
+			//	creat_member(userid);
+			//}
+			var win_id = $(".hb_curr").attr('id').replace('member_','');//显示窗口Id
+			alert(from);
+			alert(msg);
+			alert(win_id);
+			var username = $('#username').val();
+			//FF下登陆的是Neo from输出NEO NEO
+			//from和username相同的时候，显示为自己发的
+			
+			var html = '<div class="twi_avg red"><div class="blue">'+from+' 20:21:35</div>'+msg+'</div>';
+			$('#chat_'+win_id).append(html);
+			
+		}
+
+		var showmessage_me = function (from,msg) {
+			
+			var msg = formatHTML(msg);
+			var win_id = $(".hb_curr").attr('id').replace('member_','');//显示窗口Id
+			var username = $('#username').val();
+			html = '<div class="twi_avg"><div class="green">'+from+' 20:21:35</div>'+msg+'</div>';
+			$('#chat_'+win_id).append(html);
+			$('#message').val('');
+
+		}
+
+		var showmessage_onffline = function (from, msg,from_id){
+			//先显示离线信息图标
+
+
+
+			//注册离线信息事件
+			$('.seach').click(creat_offline(from, msg,from_id));
+
+		}
+
+		var creat_offline = function (from, msg,from_id){
+			//创建对话框
+			var member = $('#member_'+from_id);
+			var chat = $('#chat_'+from_id);
+			if(member.size()<=0){
+				creat_member(from_id);
+			}
+			if(chat.size()<=0){
+				creat_chat(from_id);
+			}
+			var html = '<div class="twi_a"><div class="twi_main">'+msg+'</div></div>';
+			$('#chat_'+from_id).append(html);
+		}
+
+		//创建左边聊天头像
+		var creat_member = function(from_id){
+			member_html = '<li class="hb_curr" id="member_'+from_id+'"><img src="images/user_head/1.gif"><span>'+$('#node_'+from_id).text()+'</span></li>';
+			$('.hb_list').append(member_html);
+		}
+		//创建聊天窗口
+		var creat_chat = function(from_id){
+			chat_html = '<div class="chart_box" id="chat_'+from_id+'"></div>';
+				$('.chat').append(chat_html);
+		}
+		
+		// 格式化消息 
+		function formatHTML(html){
+			html = html.replace(/</g, '&lt;');
+			html = html.replace(/>/g, '&gt;');
+			return html;
+		}
+
+		memberclick(0);
+		closeclick();
+	</script>
+</body>
+</html>

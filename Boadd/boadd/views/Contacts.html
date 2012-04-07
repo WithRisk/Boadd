@@ -1,0 +1,140 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="viewport" content="width=device-width,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no"/>
+<meta name="format-detection" content="telephone=no"/>
+<title>通讯录</title>
+<link href="css/main.css" rel="stylesheet" type="text/css" />
+<script type="text/javascript" src="/js/jquery-1.6.2.min.js"></script>
+<script type="text/javascript" src="/js/socket.js"></script>
+</head>
+
+<body>
+	<div class="wrap0">
+		<div class="con_main">
+			<div class="con_side">
+				<div class="cs_top">
+					<div class="avatar"><img src="images/user_head/2.gif" /><%= _name %></div>
+					<div class="seach"><input type="text" value="搜索联系人" /></div>
+				</div>
+				<div class="cs_bom">
+					<ul class="cs_tab">
+						<li class="cs_curr">教师</li>
+						<li>学生</li>
+						<li>家长</li>
+					</ul>
+					<div class="cs_group">
+						<div class="user_group">
+							<h3 class="group_title gt_first">校长室(1/3)</h3>
+							<ul class="member_list">
+								<li><img src="images/user_head/1.gif" />用户名a</li>
+								<li class="ml_curr"><img src="images/user_head/1.gif" />用户名b</li>
+								<li><img src="images/user_head/1.gif" />用户名c</li>
+							</ul>
+						</div>
+						<div class="user_group">
+							<h3 class="group_title0">教研组(0/20)</h3>
+						</div>
+						<div class="user_group">
+							<h3 class="group_title">后勤处(2/20)</h3>
+							<ul class="member_list">
+								<li><img src="images/user_head/1.gif" />用户名1</li>
+								<li><img src="images/user_head/1.gif" />用户名2</li>
+								<li><img src="images/user_head/1.gif" />用户名3</li>
+								<li><img src="images/user_head/1.gif" />用户名4</li>
+								<li><img src="images/user_head/1.gif" />用户名5</li>
+								<li><img src="images/user_head/1.gif" />用户名6</li>
+							</ul>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="con_content">
+				<div class="user_act">
+					<img src="images/user_head/3.gif" />
+					<div class="act_btn">
+						<div class="btn_ed" onclick="show_edit(this)">编辑</div>
+						<div class="btn_not">写通知</div>
+						<div class="btn_chat">聊天</div>
+					</div>
+					<div class="user_basic">
+						<p><%=_sut_name%> <%=_class%></p>
+						<p><% var type=_usertype==1 ? '学生':'老师' %><%-type%></p>
+						<p class="user_name"><%=_name%></p>
+					</div>
+				</div>
+				<div class="user_pro">
+					<ul class="up_list">
+						<li>
+							<span class="up_title">性别:</span>
+							<span id="sex" class="up_pro" ><%  var sex = _sex == 1 ? '女' : '男'; %><%-sex%></span>
+						</li>
+						<li>
+							<span class="up_title">生日:</span>
+							<span id="birthday" class="up_pro" ><%=_birthday%></span>
+						</li>
+						<li>
+							<span class="up_title">学号:</span>
+							<span id="sut_id" class="up_pro"><%=_sut_id%></span>
+						</li>
+						<li>
+							<span class="up_title">电话:</span>
+							<span id="phone" class="up_pro"><%=_phone%></span>
+						</li>
+						<li>
+							<span class="up_title">邮箱:</span>
+							<span id="email" class="up_pro"><%=_email%></span>
+						</li>
+						<li>
+							<span class="up_title">地址:</span>
+							<span id="address" class="up_pro"><%=_address%></span>
+						</li>
+						<li>
+							<span class="up_title">家长:</span>
+							<span id="p_name" class="up_pro"><%=_p_name%></span>
+						</li>
+						<li>
+							<span class="up_title">家长电话:</span>
+							<span id="p_phone" class="up_pro"><%=_p_phone%></span>
+						</li>
+						<li>
+							<span class="up_title">个人简介:</span>
+							<span id="remark" class="up_pro"><%=_remark%></span>
+						</li>
+					</ul>
+				</div>
+			</div>
+		</div>
+	</div>
+	<script>
+	function show_edit (showid){
+		if($(showid).text()!=='保存'){
+		$('.up_pro').addClass('user_border').attr('contenteditable','true');
+		$(showid).text('保存');
+		}else{
+		$('.up_pro').removeClass('user_border').attr('contenteditable','false');
+		$(showid).text('编辑');
+		save_userinfo();
+		}
+	}
+	var save_userinfo = function(){
+		var _sex=$('#sex').text().trim();
+		var _birthday=$('#birthday').text().trim();
+		var _stu_id=$('#stu_id').text().trim();
+		var _phone=$('#phone').text().trim();
+		var _email=$('#email').text().trim();
+		var _address=$('#address').text().trim();
+		var _p_name=$('#p_name').text().trim();
+		var _p_phone=$('#p_phone').text().trim();
+		var _remark=$('#remark').text().trim();
+		alert(_birthday);
+		
+		var socket = io.connect('http://192.168.0.108');
+	    socket.emit('save User', _sex, _birthday, _stu_id, _phone, _email, _address, _p_name, _p_phone, _remark,  function(ok){
+			//插入了,你懂的
+		});
+	}
+	</script>
+</body>
+</html>

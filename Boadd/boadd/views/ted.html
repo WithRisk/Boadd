@@ -1,0 +1,58 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="viewport" content="width=device-width,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no"/>
+<meta name="format-detection" content="telephone=no"/>
+<title>图书馆-书籍</title>
+<link href="css/main.css" rel="stylesheet" type="text/css" />
+</head>
+
+<div class="lib_wrap">
+		<div class="lib_lbox">
+			<div class="lib_bar">
+				<div class="lib_search"><input name="" type="text" /></div>
+				<div class="lib_class">全部分类
+					<ul class="lc_pop" style="top:31px; display:none;">
+						<li class="lc_curr">全部分类</li>
+						<li>文学</li>
+						<li>科幻</li>
+						<li>爱情</li>
+					</ul>
+				</div>
+			</div>
+			<div class="lib_body">
+				<ul class="video_list">
+				<%for(var i=0,len=ted.length;i < len; i++) {
+					var teds = ted[i];
+				%>
+					<li>
+						<video width="140" height="140" controls="controls" autoplay="autoplay" preload="auto"><source src="<%=teds.pad_url%>" type="video/mp4"></video>
+						<div class="vl_info">
+							<h3><%=teds.title%></h3>
+							<!--
+							<div class="vl_tag"><span>学校：<em>哈佛大学</em></span><span>讲师：<em>Michael J. Sandel</em></span><span>集数：<em>12</em></span><span>类型：<em>哲学 伦理</em></span></div>
+							<b style="display:none;">《公正：该如何做是好？》是为法学院学生开设的课程，出发点是谈公正和正义，一共分为12堂课。如果你看 过第一堂课，你就会知道，在愚蠢的国内大学教育中，政治学被庸俗化和弱智化到了什么程度，以至于大家会觉得只有乏味已极且心存卑鄙之辈才应该学习，人文学 科也只是纸面上的功夫。通过迈克尔.桑德尔的讲授，你可以看到任意一结论的导出，后面都有论证的严谨和思考的精深。明白《政治学》并非只是教材上看到的那 套阶级分析的蠢话，而是切实地关心我们的处境，我们的生活，并致力于实现真正的公正。单是看西方思想家的思辨过程，就已经足够性感。 <a href="#">[收起]</a></b>
+							-->
+							<p><b style="display:block;"><%=teds.remark%></b></p>
+						</div>
+						<div class="clear"></div>
+					</li>
+					<%}%>
+				</ul>
+			</div>
+		</div>
+	</div>
+</body>
+</html>
+
+
+<!--
+	<%for(var i=0,len=ted.length;i < len; i++) {
+					var teds = ted[i];
+				%>
+				<li>	
+<video width="200" height="200" controls="controls" autoplay="autoplay" preload="auto"><source src="<%=teds.pad_url%>" type="video/mp4"> </video>
+				</li>
+				<%}%>
+-->

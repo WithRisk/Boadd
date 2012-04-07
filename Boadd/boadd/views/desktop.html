@@ -1,0 +1,170 @@
+﻿<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>博+教育系统</title>
+<link rel="stylesheet" href="css/style.css" />
+<link rel="stylesheet" href="/js/themes/base/jquery.ui.all.css" />
+<link rel="stylesheet" href="/js/jquery-smartMenu/css/smartMenu.css" />
+<script type="text/javascript" src="/js/jquery-1.6.2.min.js"></script>
+<script type="text/javascript" src="/js/myLib.js"></script>
+<script type="text/javascript" src="/js/socket.js"></script>
+<script type="text/javascript" src="/js/jquery-ui-1.8.16.custom.min.js"></script>
+<script type="text/javascript" src="/js/jquery.winResize.js"></script>
+<script type="text/javascript" src="/js/jquery-smartMenu/js/mini/jquery-smartMenu-min.js"></script>
+<script type="text/javascript" src="/js/chatroom.js"></script>
+<script type="text/javascript" src="/js/index_ok.js"></script>
+
+
+
+<script>
+	var socket = io.connect('http://192.168.0.108');
+	function change_bg(imgsrc){
+		
+		$('#bd').css('background-image','url(http://192.168.0.108:8080/'+imgsrc+')');
+		
+	}
+
+	function show_chat(chat_bar){
+	//	$("#chat").show();
+	//	$(chat_bar).removeClass().addClass('bar_chat_c');
+	}
+	//function exit(){
+	//	socket.emit('exit');
+//
+//	}
+//	socket.on('exit',function(){
+		
+//	});
+	function ext(){
+			var type = $('#info').css('display');
+		// window.location.href='/signout';
+			if(type==='none'){
+				$('#info').show();
+			}else{
+				$('#info').hide();
+			}
+	}
+
+	function hide_baidu(){
+		var type = $('#baidu').css('display');
+		if(type==='none'){
+				$('#baidu').show();
+			}else{
+				$('#baidu').hide();
+		}
+	}
+
+	function edit_user (_edit){
+		var bouri=$(_edit).attr('bouri'),title='编辑个人信息',wid=$(_edit).attr('id');
+		myLib.desktop.win.newWin({
+			 WindowTitle:title,
+			 iframSrc:'http://192.168.0.108:8080'+bouri,
+			 WindowsId:wid,
+			 WindowAnimation:'easeInBack'
+	 	});
+	};
+
+
+	function chat_info (_chat){
+		var bouri=$(_chat).attr('bouri'),title='聊天',wid=$(_chat).attr('id');
+		myLib.desktop.win.newWin({
+			 WindowTitle:title,
+			 iframSrc:'http://192.168.0.108:8080'+bouri,
+			 WindowsId:wid,
+			 WindowAnimation:'easeInBack'
+	 	});
+	};
+
+	function setting (_setting){
+		var bouri=$(_setting).attr('bouri'),title='设置桌面背景',wid=$(_setting).attr('id');
+		myLib.desktop.win.newWin({
+			 WindowTitle:title,
+			 iframSrc:'http://192.168.0.108:8080'+bouri,
+			 WindowsId:wid,
+			 WindowAnimation:'easeInBack'
+	 	});
+	};
+
+
+</script>
+
+
+</head>
+<body id="bd"> 
+<div id="title_bar">
+<ul class="left_tbr">
+<li id="cc" onclick="ext()">
+<div id="info" style="background-image:url(images/Pull-down-Menu.png);width:104px;height:165px;margin-left:-10px;position:absolute;z-index:2;display:none;margin-top:-5px;">
+<div style="background-image:url(images/icons.png);background-position:-38px 0px;width:40px;height:32px;margin-left:5px;margin-top:5px;"></div>
+<ul>
+<li style="background:none;width:100px;margin-top:15px;height:24px;margin-left:25px;">关于我们</li>
+<li style="background:none;width:100px;height:24px;margin-left:25px;">产品介绍</li>
+<li style="background:none;width:100px;height:24px;margin-left:25px;">意见反馈</li>
+<li style="background:none;width:100px;height:24px;margin-left:25px;"><a href="/signout">退出</a></li>
+</ul>
+</div>
+</li>
+<li id="user_avg" bouri="/edit_user" style="background-image:url(images/index_avg.png);height:25px;width:28px;margin-top:10px;" onclick="edit_user(this)" ></li>
+<li class="bar_shezhi" id="user_bg" bouri="/edit_userbg" onclick="setting(this)"></li>
+
+</ul>
+<div class="center_bar">
+<img src="images/title_logo.png"/>
+</div>
+<ul class="right_tbr">
+<!--
+<li class="bar_sousuo" onclick="hide_baidu()"> 
+<div style="postion:relative;margin-left:-269px;z-index:20;background-image:url('images/search.png');width:310px;height:100px;z-index:1;display:block;" id="baidu">	
+	
+	<form action="http://www.baidu.com/baidu" target="_blank" style="z-index:99;margin-top:49px;margin-left:5px;position:absolute; ">
+	<table><tr><td>
+	<input name=tn type=hidden value=baidu>
+	<input type=text name=word style="width:250px;height:34px;">
+	</td></tr></table>
+	</form>
+	</div>
+</li>
+-->
+<li  style="background-image:url(images/language-us-icon.png);height:30px;width:30px;margin-top:9px;"></li>
+<li class="bar_mail"></li>
+<li class="bar_chat" id="user_chat" bouri="/index_chat" onclick="chat_info(this)"></li>
+
+<li class="bar_jishiben"></li>
+</ul>
+</div>
+<ul id="deskIcon">
+<li class="desktop_icon" id="win1" bouri="/Bulletinboard"> <span class="icon"><img src="icon/Contacts.png"/></span>
+<div class="text">公告板
+<div class="right_cron"></div>
+</div>
+</li>
+<li class="desktop_icon" id="win2" bouri="/Contacts"> <span class="icon"><img src="icon/AddressBook.png"/></span>
+<div class="text">通讯录
+<div class="right_cron"></div>
+</div>
+</li>
+<li class="desktop_icon" id="win2" bouri="/index_chat"> <span class="icon"><img src="icon/chat.png"/></span>
+<div class="text">聊天
+<div class="right_cron"></div>
+</div>
+</li>
+
+<li class="desktop_icon" id="ted" bouri="/ted"> <span class="icon"><img src="icon/ted.png"/></span>
+<div class="text">公开课
+<div class="right_cron"></div>
+</div>
+</li>
+
+</ul>
+
+<div id="taskBar">
+<div id="leftBtn"><a href="#" class="upBtn"></a></div>
+<div id="rightBtn"><a href="#" class="downBtn"></a> </div>
+<div id="task_lb_wrap">
+<div id="task_lb"></div>
+</div>
+</div>
+</div>
+</body>
+</html>

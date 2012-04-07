@@ -1,0 +1,101 @@
+    body, div, dl, dt, dd, ul, ol, li, h1, h2, h3, h4, h5, h6, pre, form, fieldset, input, textarea, p, blockquote, th, td {
+	margin:0;
+	padding:0;
+    }
+    *{
+	margin:0;
+	padding:0;
+    }
+    ol, ul, li {
+	list-style:none;
+    }
+   .user_info{
+       background-color:#BECDDC;
+       width:220px;
+       height:130px;
+   }
+	.user_info nav{
+		width:220px;
+		height:38px;
+	}
+	.user_list{
+		width:220px;
+		height:318px;
+		overflow:scroll;
+                overflow-x:hidden;
+                -webkit-overflow-scrolling: touch;
+	}
+	.info_lfet{
+		float:left;border:1px solid;
+	}
+	.info_right{
+             float:left;width:350px;height:480px;
+            
+	}
+       .face{
+          float:left;
+          width:65px;
+          display:inline;
+       }
+       .face img{
+           margin:10px;
+           width:64px;
+           height:64px;
+       }
+       .face p{
+            margin-left:90px;
+            padding-top:55px;
+            font-size:18px;
+       }
+       .search{
+       background-image:url('images/chat-icons.png');
+       width:196px;
+       height:30px;
+       margin-top:30px;
+       margin-left:10px;
+       }
+       .searchval{
+           width:140px;
+           margin-left:40px;
+           height:20px;
+           border:0;
+           margin-top:4px; 
+       }
+       .nav_list li{
+       background-color:#F0F8FF;
+       float:left;
+       width:71px;
+       height:35px;
+       border:1px solid;
+       line-height:35px;
+       text-align:center;
+       }
+	.user_type{
+		width:220px;
+	}
+	.name_list li{
+		margin-top:15px;
+		margin-left:20px;
+		margin-bottom:30px;
+	}
+	.name_list image{
+		margin:10px 10px 0px 10px;
+		width:32px;
+		height:32px;
+		
+	}
+	.name_list div{
+		text-align:center;
+		width:80px;
+		margin-top:-35px;
+		margin-left:60px;
+	}
+	.name_title{
+		float:left;
+		width:27px;
+		height:10px;
+		background-image:url(images/chat-icons.png);background-position:0px -80px;
+	}
+	.user_border{
+		border:1px solid;
+	}

@@ -1,0 +1,138 @@
+
+li{
+	list-style:none outside none;
+}
+.input{
+
+}
+.fuc{
+	height:460px;
+	overflow:scroll;
+        overflow-x:hidden;
+        -webkit-overflow-scrolling: touch;
+}
+.fuc li{
+	float:left;
+	border:1px solid #819CB4;
+	height:40px;
+	width:80px;
+}
+.left_img{
+	background:url(images/desktop-icons.png);
+	background-position:0px -20px;
+	width:16px;
+	height:21px;
+	margin:7px 0px 0px 14px;
+}
+.left_img span{
+	width:40px;height:20px;margin:-15px 0px 0px 39px;position:absolute;
+}
+.right_img{
+	background:url(images/desktop-icons.png);
+	background-position:0px -44px;
+	width:16px;
+	height:21px;
+	margin:7px 0px 0px 14px;
+}
+.right_img span{
+	width:40px;height:20px;margin:-15px 0px 0px 39px;position:absolute;
+}
+.fabu{
+	-moz-border-radius:3px;
+	-webkit-border-radius:3px;
+	width:120px;
+	height:40px;
+	font-color:#000000;
+	font-size:18px;
+	color:white;
+	background-color:#3498F5;
+}
+.feed_nav{
+	width:565px;
+	height:40px;
+	margin-top:30px;
+	background-color:#E6F3FF;
+	border:1px solid #C0D8ED;
+}
+.feed_nav li{
+	float:left;
+	width:80px;
+	height:29px;
+	margin-left:20px;
+	margin-top:-5px;
+	border-bottom:none;
+	border-radius:none;
+
+}
+.feed_nav li span{
+	width:80px;
+	height:24px;
+	position:relative;
+	text-align:center;
+	padding-top:3px;
+	border-bottom:none;
+	margin-left:22px;
+	top:6px;
+	
+}
+.select {
+	background-color:white;
+	border:1px solid #C0D8ED;
+}
+.content{
+	margin-left:90px;
+	padding:3px 0 16px;
+}
+.feed_list dl{
+	border-bottom-style:solid;
+	border-bottom-width:1px;
+	border-bottom-color:#3A95CE;
+	margin:10px 15px 20px 15px;
+}
+.feed_list .face{
+	display:inline;
+	float:left;
+	width:50px;
+}
+.feed_list em{
+	font-style:normal;
+	font-weight:normal;
+}
+.feed_list .s_nam{
+	color:#59B9FB;
+}
+.rel{
+	float:right;
+	border-radius:5px;
+	border:1px solid #59B9FB;
+	width:80px;
+	height:30px;
+	text-align:center;
+	line-height:30px;
+	color:#59B9FB;
+}
+.icon{
+	width:40px;
+	height:20px;
+	top:-17px;
+	margin-left:35px;
+	position:relative;
+}
+.rel_list_content{
+	background-color:#E6F3FF;
+	width:400px;
+	border-radius:3px;
+	border:1px solid #C0D8ED;
+	position:relative;
+	margin-top:40px;
+
+}
+.rel_button{
+	margin-top:10px;
+	width:400px;
+	position:relative;
+	margin-left:260px;
+}
+.feed_list_content{
+	
+}

@@ -1,0 +1,28 @@
+{
+  "name": "Boadd",
+  "description": "Boadd Education system",
+  "version": "0.1.0",
+  "author": "Thanatus-joel",
+  "dependencies": {
+    "connect-redis": "~1.2.0",
+    "express": "~2.5.8",
+    "jade": "~0.21.0",
+    "mime": "~1.2.5",
+    "mysql": "~0.9.5",
+    "nib": "~0.3.2",
+    "now": "~0.8.1",
+    "qs": "~0.4.2",
+    "redis": "~0.7.1",
+    "session": "~0.1.0",
+    "socket.io": "~0.9.2",
+    "socket.io-client": "~0.9.2",
+    "stylus": "~0.24.0",
+    "uglify-js": "~1.2.6",
+    "websocket": "~1.0.4",
+    "node-dev": "~0.2.2",
+    "html2jade": "~0.1.17",
+    "mailer": "~0.6.7",
+    "connect": "~1.8.6"
+  },
+  "devDependencies": {}
+}

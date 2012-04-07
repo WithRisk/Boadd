@@ -1,0 +1,228 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="viewport" content="width=device-width,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no"/>
+<meta name="format-detection" content="telephone=no"/>
+<title>公告板</title>
+<link href="css/main.css" rel="stylesheet" type="text/css" />
+<script type="text/javascript" src="/js/jquery-1.6.2.min.js"></script>
+<script type="text/javascript" src="/js/socket.js"></script>
+<script>
+	
+	function checkLen(obj) 
+		{
+		var maxChars = 200;//最多字符数
+		if (obj.value.length > maxChars)
+		obj.value = obj.value.substring(0,maxChars);
+		var curr = maxChars - obj.value.length;
+		document.getElementById("count").innerHTML = curr.toString();
+		}
+	function isIos()
+	{
+	var ua = navigator.userAgent.toLowerCase();
+    return ua.indexOf("ipad") > -1 || ua.indexOf("ipod") > -1 || ua.indexOf("iphone os") > -1;
+	}
+	function sendmessage(){
+		$('#send_message').trigger("click");
+	}
+	$(document).ready(function(){
+		//设备判断 你懂的
+		if(!isIos()){
+		$('.btn_pic').show();
+		$('.btn_vod').show();
+		}
+
+
+		$('.not_tab').find('a').click(function(){
+			$('.not_tab').find('li').removeClass('nt_curr');
+
+			$(this).parent('li').addClass('nt_curr');
+
+		 	var list_id = $(this).attr('id').replace('message_','');
+		 	//先隐藏所有列表
+		 	$('.not_list').hide();
+		 	
+		 	$('#list_'+list_id).show();
+		});
+
+
+		$('.btn_rep').click(function(){
+			var type = $(this).next('.rep_wrap').css('display');
+			if(type==='none'){
+				 $(this).next('.rep_wrap').show();
+			}else{
+				 $(this).next('.rep_wrap').hide();
+			}
+		});
+
+		$('.btn_dis').click(function(){
+
+			var re_id=$('#re_id').val();
+			var re_message=document.getElementById('re_message_'+re_id).value;
+			alert(re_message);
+			$.post("/insert_bull_re",{re_id:re_id,re_message:re_message},function(result){
+    			alert(result);
+  			});
+			///insert_bull_re
+			//var sub_id=$(this).attr('node_id');
+			var img_src=$('#session_avg').val();
+			var user_name=$('#session_username').val();
+			var message=re_message;
+
+			
+			//$('#send_message_'+sub_id).trigger("click");
+			var re_html='<div class="rb_content"><div class="rb_list"><div class="rb_head"><img src="data:image/png;base64,'+img_src+'" /></div><div class="rb_right"><p class="rb_txt"><strong>'+user_name+':</strong>'+message+'</p></div></div><div class="clear"></div></div>';
+			$('#rebox_'+re_id).children('.rb_content').first().before(re_html);
+			document.getElementById('re_message_'+re_id).value='';
+		});
+	});
+</script>
+</head>
+
+<body>
+	<div class="wrap_n" style="height:508px;">
+		<div class="not_main">
+			<div class="input_box">	
+				<div class="txt_area">
+				<form method="post"  action="/insert_bull" >	
+				<!--
+				
+				
+				<input type="text" name="message" id="message" style="width:534px;height:98px;border:0;margin-left:1px;"/>-->
+				<textarea name="message" cols="" rows="" id="message" onkeyup="checkLen(this)" ></textarea>
+				<input type="submit"  id="send_message" style="display:none;">
+				</form>	
+				</div>
+				<div class="ib_act">
+					<div class="btn_pic" style="display:none">图片</div>
+					<div class="btn_vod" style="display:none">视频</div>
+					<div class="ib_right">
+						<div class="btn_rel" onclick="sendmessage()"><img src="images/rel.gif" /></div>
+						<span>还能输入<strong id="count">200</strong>个字</span>
+					</div>
+				</div>
+			</div>
+			<div class="not_box">
+				<div class="nav_box">
+					<ul class="not_tab">
+					<li class="nt_curr"><a id="message_0" target="" style="-webkit-touch-callout:none;">全校</a></li>
+					<li><a  id="message_2" target="" style="-webkit-touch-callout:none;">教师</a></li>
+					<li><a  id="message_1"  target="" style="-webkit-touch-callout:none;">学生</a></li>
+					</ul>
+				</div>
+				 <!--
+				<div class="not_tips"><a href="#">有6条新公告，点击查看。</a></div>
+				-->
+				<div class="not_list" id="list_0" style="display:block">
+					<%for(var i=0,len=name.length;i < len; i++) {
+						var names = name[i];
+					%>
+					<%if(names.messagetype==0&&names.message_id==''){%>		
+
+					<%if(i==1){%>		
+					<div class="not_content nc_first">
+						<div class="nc_head"><img src="data:image/png;base64,<%=names.user_avatar%>" style="width:63px;height:63px;"/></div>
+						<div class="nc_right">
+							<p class="nc_txt"><strong><%=names.username%>:</strong><%=names.message%></p>
+							<span class="date"><%=names.created%></span>
+							<div class="btn_rep">回复</div>
+						</div>
+						<div class="clear"></div>
+					</div>
+					<%}else{%>
+					<div class="not_content">
+						<div class="nc_head"><img src="data:image/png;base64,<%=names.user_avatar%>" style="width:63px;height:63px;"/></div>
+						<div class="nc_right">
+							<p class="nc_txt"><strong><%=names.username%>:</strong><%=names.message%></p>
+							<span class="date"><%=names.created%></span>
+							<div class="btn_rep">回复</div>
+						</div>
+						<div class="clear"></div>
+					</div>
+					<%}%>
+					<%}%>
+					<%}%>
+				</div>
+				<div class="not_list" id="list_1" style="display:none">
+					<%for(var i=0,len=name.length;i < len; i++) {
+						var names = name[i];
+					%>	
+					<%if(names.messagetype==1&&names.message_id==''){%>		
+					<%if(i==0){%>
+					<div class="not_content nc_first">
+					<%}else{%>
+					<div class="not_content" >
+					<%}%>
+						<div class="nc_head"><img src="data:image/png;base64,<%=names.user_avatar%>" style="width:63px;height:63px;"/></div>
+						<div class="nc_right">
+							<p class="nc_txt"><strong><%=names.username%>:</strong><%=names.message%></p>
+							<span class="date"><%=names.created%></span>
+							<div class="btn_rep">回复</div>
+								<div class="rep_wrap" id="rep_<%=names.id%>" style="display:none;">
+								<div class="arrowtop"><div class="arrowbg"></div></div>
+								<div class="rep_box" id="rebox_<%=names.id%>"> 
+								<div class="rb_area">
+								<!-- <form method="post"  action="/insert_bull_re" ></form>	-->	
+								
+								<input type="hidden" id="re_id" name="re_id" value="<%=names.id%>"/>
+								<textarea cols="" rows="" name="re_message" id="re_message_<%=names.id%>"></textarea>
+								<input type="submit"  id="send_message_<%=names.id%>" style="display:none;">
+								
+								</div>
+								<div class="rb_act">
+								<div class="btn_dis"><img src="images/dis.gif" /></div>
+								</div>
+					<%}%>
+					<%for(var t=0,len=name.length;t < len; t++) {
+						var _names = name[t];
+					%>
+					<%if(_names.messagetype==1&&_names.message_id==names.id){%>					
+										<!--回复开始-->
+									<div class="rb_content">
+										<div class="rb_list">
+											<div class="rb_head"><img src="data:image/png;base64,<%=_names.user_avatar%>" /></div>
+											<div class="rb_right">
+												<p class="rb_txt"><strong><%=_names.username%>:</strong><%=_names.message%></p>
+											<!--<p class="rb_a"><a href="#">回复</a></p> -->
+											</div>
+										</div>
+										<div class="clear"></div>
+									</div>
+									<!--回复结束-->
+					<%}%>
+					<%}%>
+					<%if(names.messagetype==1&&names.message_id==''){%>
+							</div>
+							</div>
+						</div>
+						<div class="clear"></div>
+					</div>
+					<%}%>
+					<%}%>
+				</div>
+				<div class="not_list" id="list_2" style="display:none">
+					<%for(var i=0,len=name.length;i < len; i++) {
+						var names = name[i];
+					%>	
+					<%if(names.messagetype==2&&names.message_id==''){%>			
+					<div class="not_content">
+						<div class="nc_head"><img src="data:image/png;base64,<%=names.user_avatar%>" style="width:63px;height:63px;"/></div>
+						<div class="nc_right">
+							<p class="nc_txt"><strong><%=names.username%>:</strong><%=names.message%></p>
+							<span class="date"><%=names.created%></span>
+							<div class="btn_rep">回复</div>
+						</div>
+						<div class="clear"></div>
+					</div>
+					<%}%>
+					<%}%>
+				</div>
+			</div>
+		</div>
+		<div class="clear"></div>
+		<input type="hidden" value="<%=_name%>" id="session_username"/>
+		<input type="hidden" value="<%=_avatar%>" id="session_avg"/>
+	</div>
+</body>
+</html>
